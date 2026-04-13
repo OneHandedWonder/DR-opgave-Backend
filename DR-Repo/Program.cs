@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using DR.Data;
+using RecordsRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,11 +25,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-/*
-builder.Services.AddDbContext<DRContext>(options =>
+
+builder.Services.AddDbContext<RecordDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DR-DB")));
-builder.Services.AddScoped<IRecordRepository, RecordRepository>();
-builder.Services.AddSingleton<IRecordService, RecordService>();*/
+builder.Services.AddScoped<RecordRepoDB>();
 
 var app = builder.Build();
 
