@@ -4,9 +4,14 @@ using DR.Data;
 using RecordsRepo;
 [ApiController]
 [Route("api/v2/records")]
-public class RecordsController : ControllerBase
+public class RecordsControllerv2 : ControllerBase
 {
-    private static readonly RecordRepoDB recordRepository = new RecordRepoDB(new RecordDbContext());
+    private readonly RecordRepoDB recordRepository;
+
+    public RecordsControllerv2(RecordRepoDB recordRepository)
+    {
+        this.recordRepository = recordRepository;
+    }
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -14,7 +19,6 @@ public class RecordsController : ControllerBase
     {
         var records = recordRepository.GetAll();
         return Ok(records);
-    
     }
 
 }
