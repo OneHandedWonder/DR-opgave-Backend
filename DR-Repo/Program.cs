@@ -24,10 +24,10 @@ builder.Services.AddCors(options =>
     });
 });
 /*
-builder.Services.AddDbContext<>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DR-DB")));
-builder.Services.AddScoped<>();
-builder.Services.AddSingleton<>();*/
+builder.Services.AddDbContext<DRContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("DR-DB")));
+builder.Services.AddScoped<IRecordRepository, RecordRepository>();
+builder.Services.AddSingleton<IRecordService, RecordService>();*/
 
 var app = builder.Build();
 
