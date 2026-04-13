@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DR-Repo")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+cc6027cd8c4584308a593a220cdaa487bb3341f3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+69a30872076b109b13276b6db6dc7ae1d6d6932c")]
 [assembly: System.Reflection.AssemblyProductAttribute("DR-Repo")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DR-Repo")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
