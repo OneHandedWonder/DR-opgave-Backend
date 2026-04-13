@@ -1,0 +1,6 @@
+@DR_Repo_HostAddress = http://localhost:5249
+
+GET {{DR_Repo_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
