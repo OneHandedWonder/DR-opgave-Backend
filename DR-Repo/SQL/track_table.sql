@@ -5,3 +5,6 @@ CREATE TABLE IF NOT EXISTS "tracks" (
     "playedAt" timestamp NOT NULL,
     "channel" text NOT NULL
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "ux_tracks_identity_ci"
+ON "tracks" (lower("channel"), lower("Artist"), lower("Name"));

@@ -6,6 +6,16 @@ namespace DR_Repo.Services;
 
 public sealed class TrackSnapshotBackgroundService : BackgroundService
 {
+    private static readonly string[] NonMusicMarkers =
+    [
+        "radioavisen",
+        "døgnet rundt",
+        "de seneste nyheder",
+        "seneste nyheder",
+        "nyheder",
+        "news"
+    ];
+
     private static readonly string[] ChannelSlugs =
     [
         "p1",
@@ -82,6 +92,11 @@ public sealed class TrackSnapshotBackgroundService : BackgroundService
                     continue;
                 }
 
+                if (!IsLikelyMusicTrack(artist, title, currentTrack))
+                {
+                    continue;
+                }
+
                 var channel = current.ChannelSlug ?? channelSlug;
                 var nowUtc = DateTime.UtcNow;
 
@@ -147,5 +162,22 @@ public sealed class TrackSnapshotBackgroundService : BackgroundService
         }
 
         return !string.Equals(currentTrack.Trim(), "null", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsLikelyMusicTrack(string artist, string title, string currentTrack)
+    {
+        var artistNorm = artist.Trim().ToLowerInvariant();
+        var titleNorm = title.Trim().ToLowerInvariant();
+        var fullNorm = currentTrack.Trim().ToLowerInvariant();
+
+        foreach (var marker in NonMusicMarkers)
+        {
+            if (artistNorm.Contains(marker) || titleNorm.Contains(marker) || fullNorm.Contains(marker))
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
