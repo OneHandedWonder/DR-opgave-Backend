@@ -15,9 +15,9 @@ public class RecordsControllerv2 : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<IEnumerable<Record>> GetAll()
+    public ActionResult<IEnumerable<Record>> GetAll([FromQuery] string? search = null)
     {
-        var records = recordRepository.GetAll();
+        var records = recordRepository.GetAll(search);
         return Ok(records);
     }
 

@@ -12,9 +12,20 @@ public class RecordRepoDB
 		_db = db;
 	}
 
-	public IEnumerable<Record> GetAll()
+	public IEnumerable<Record> GetAll(string? search = null)
 	{
-		return _db.Records.AsNoTracking().ToList();
+		var query = _db.Records.AsNoTracking().AsQueryable();
+
+		if (!string.IsNullOrWhiteSpace(search))
+		{
+			var term = $"%{search.Trim()}%";
+			query = query.Where(r =>
+				EF.Functions.ILike(r.Name, term) ||
+				EF.Functions.ILike(r.Artist, term) ||
+				EF.Functions.ILike(r.Genre, term));
+		}
+
+		return query.ToList();
 	}
 
 	public Record Add(Record record)
