@@ -61,14 +61,13 @@ public class RecordsControllerv2 : ControllerBase
         if (record == null)
             return BadRequest("Record body is required.");
 
-        var existingRecord = recordRepository.GetById(id);
-        if (existingRecord == null)
+        record.Id = id;
+        var updatedRecord = recordRepository.Update(id, record);
+        if (updatedRecord == null)
         {
             return NotFound($"Record with id {id} not found.");
         }
 
-        record.Id = id;
-        recordRepository.Update(record);
-        return Ok(record);
+        return Ok(updatedRecord);
     }
 }
