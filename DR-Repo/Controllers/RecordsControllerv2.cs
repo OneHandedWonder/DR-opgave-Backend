@@ -41,14 +41,13 @@ public class RecordsControllerv2 : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public ActionResult<Record> Delete([FromRoute] int id)
     {
-        var record = recordRepository.GetById(id);
-        if (record == null)
+        var deletedRecord = recordRepository.Delete(id);
+        if (deletedRecord == null)
         {
             return NotFound($"Record with id {id} not found.");
         }
 
-        recordRepository.Delete(id);
-        return Ok(record);
+        return Ok(deletedRecord);
     }
 
     [HttpPut("{id}")]
