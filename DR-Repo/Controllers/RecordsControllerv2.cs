@@ -15,7 +15,7 @@ public class RecordsControllerv2 : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Admin,User")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<IEnumerable<Record>> GetAll([FromQuery] string? search = null)
     {
