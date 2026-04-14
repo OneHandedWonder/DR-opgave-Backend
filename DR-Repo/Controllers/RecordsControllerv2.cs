@@ -31,7 +31,7 @@ public class RecordsControllerv2 : ControllerBase
         if (record == null)
             return BadRequest("Record body is required.");
 
-        var createdRecord = recordRepository.Create(record);
+        var createdRecord = recordRepository.Add(record);
         return CreatedAtAction(nameof(GetAll), new { id = createdRecord.Id }, createdRecord);
     }
 
