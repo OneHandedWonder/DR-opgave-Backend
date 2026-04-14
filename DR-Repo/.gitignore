@@ -6,3 +6,8 @@ TestResults/
 *.suo
 *.userosscache
 *.sln.docstates
+
+# Recursive ignores for nested projects
+**/bin/
+**/obj/
+**/TestResults/
