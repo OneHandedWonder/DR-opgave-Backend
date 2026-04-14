@@ -82,6 +82,7 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<RecordDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DR-DB")));
 builder.Services.AddScoped<RecordRepoDB>();
+builder.Services.AddScoped<TrackRepoDB>();
 builder.Services.Configure<JwtSettings>(jwtSection);
 builder.Services.AddSingleton<AuthService>();
 

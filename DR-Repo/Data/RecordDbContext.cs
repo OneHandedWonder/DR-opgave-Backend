@@ -9,6 +9,7 @@ public class RecordDbContext : DbContext
     }
 
     public DbSet<Record> Records => Set<Record>();
+    public DbSet<Track> Tracks => Set<Track>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,6 +23,16 @@ public class RecordDbContext : DbContext
             entity.Property(r => r.Artist).IsRequired();
             entity.Property(r => r.trackCount).IsRequired();
             entity.Property(d => d.Duration).IsRequired();
+        });
+
+        modelBuilder.Entity<Track>(entity =>
+        {
+            entity.ToTable("tracks");
+            entity.HasKey(t => t.Id);
+            entity.Property(t => t.Name).IsRequired();
+            entity.Property(t => t.Artist).IsRequired();
+            entity.Property(t => t.PlayedAt).IsRequired();
+            entity.Property(t => t.Channel).IsRequired();
         });
     }
 }
