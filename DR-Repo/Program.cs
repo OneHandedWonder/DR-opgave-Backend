@@ -17,6 +17,20 @@ if (string.IsNullOrWhiteSpace(jwtSettings.Key))
     throw new InvalidOperationException("Jwt:Key must be configured.");
 }
 
+if (string.IsNullOrWhiteSpace(jwtSettings.Issuer))
+{
+    throw new InvalidOperationException("Jwt:Issuer must be configured.");
+}
+
+if (string.IsNullOrWhiteSpace(jwtSettings.Audience))
+{
+    throw new InvalidOperationException("Jwt:Audience must be configured.");
+}
+
+if (jwtSettings.ExpiresMinutes <= 0)
+{
+    throw new InvalidOperationException("Jwt:ExpiresMinutes must be greater than 0.");
+}
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
