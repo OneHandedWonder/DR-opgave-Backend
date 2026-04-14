@@ -34,9 +34,14 @@ public class AuthController : ControllerBase
     [Authorize]
     [HttpPost("signout")]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public IActionResult SignOutCurrentSession()
     {
         var jti = User.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+        if (string.IsNullOrWhiteSpace(jti))
+        {
+            return BadRequest(new { message = "Current token is missing the required jti claim." });
+        }
         _authService.SignOut(jti);
 
         return Ok(new { message = "Signed out. Token is revoked." });
