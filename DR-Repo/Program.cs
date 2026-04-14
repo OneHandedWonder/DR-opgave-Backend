@@ -88,6 +88,7 @@ builder.Services.AddSingleton<AuthService>();
 
 // Register HttpClient and DRRadioService
 builder.Services.AddHttpClient<DR_Repo.Services.DRRadioService>();
+builder.Services.AddHostedService<DR_Repo.Services.TrackSnapshotBackgroundService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
