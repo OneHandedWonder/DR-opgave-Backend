@@ -208,11 +208,11 @@ namespace DR_Repo.Services
 
                                 string metadata = System.Text.Encoding.UTF8.GetString(metadataBuffer).TrimEnd('\0');
                                 rawMetadataSamples.Add(metadata);
-                                var match = Regex.Match(metadata, @"StreamTitle='([^']*)'");
-                                if (!match.Success)
+                                var candidate = ExtractStreamTitle(metadata);
+                                if (string.IsNullOrWhiteSpace(candidate))
                                     continue;
 
-                                var candidate = match.Groups[1].Value.Trim();
+                                candidate = candidate.Trim();
                                 if (string.IsNullOrWhiteSpace(candidate) || candidate == "StreamTitle")
                                     continue;
 
@@ -246,6 +246,28 @@ namespace DR_Repo.Services
                     RawMetadataSamples = new List<string>()
                 };
             }
+        }
+
+        private static string? ExtractStreamTitle(string metadata)
+        {
+            const string startToken = "StreamTitle='";
+            var start = metadata.IndexOf(startToken, StringComparison.OrdinalIgnoreCase);
+            if (start < 0)
+                return null;
+
+            start += startToken.Length;
+
+            // ICY metadata usually terminates as: StreamTitle='...';
+            var end = metadata.IndexOf("';", start, StringComparison.Ordinal);
+            if (end < 0)
+            {
+                // Fallback for slightly malformed payloads missing semicolon.
+                end = metadata.LastIndexOf('\'');
+                if (end <= start)
+                    return null;
+            }
+
+            return metadata.Substring(start, end - start);
         }
 
         private static bool LooksLikeMusicTitle(string title)

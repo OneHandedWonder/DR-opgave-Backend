@@ -1,5 +1,6 @@
 using DR.Data;
 using RecordsRepo;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DR_Repo.Services;
 
@@ -64,12 +65,18 @@ public sealed class TrackSnapshotBackgroundService : BackgroundService
                     continue;
                 }
 
-                if (!HasPlayableTrack(current?.CurrentTrack))
+                if (current is null)
                 {
                     continue;
                 }
 
-                var (artist, title) = SplitTrack(current.CurrentTrack);
+                var currentTrack = current.CurrentTrack;
+                if (!HasPlayableTrack(currentTrack))
+                {
+                    continue;
+                }
+
+                var (artist, title) = SplitTrack(currentTrack);
                 if (string.IsNullOrWhiteSpace(artist) || string.IsNullOrWhiteSpace(title))
                 {
                     continue;
@@ -132,7 +139,7 @@ public sealed class TrackSnapshotBackgroundService : BackgroundService
         return ("Unknown Artist", currentTrack.Trim());
     }
 
-    private static bool HasPlayableTrack(string? currentTrack)
+    private static bool HasPlayableTrack([NotNullWhen(true)] string? currentTrack)
     {
         if (string.IsNullOrWhiteSpace(currentTrack))
         {
