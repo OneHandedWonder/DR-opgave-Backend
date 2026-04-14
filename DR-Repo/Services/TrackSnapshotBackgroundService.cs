@@ -14,7 +14,7 @@ public sealed class TrackSnapshotBackgroundService : BackgroundService
         "seneste nyheder",
         "nyheder",
         "news",
-        "nat radio"
+        "natradio"
     ];
 
     private static readonly string[] ChannelSlugs =
