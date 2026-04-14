@@ -85,6 +85,9 @@ builder.Services.AddScoped<RecordRepoDB>();
 builder.Services.Configure<JwtSettings>(jwtSection);
 builder.Services.AddSingleton<AuthService>();
 
+// Register HttpClient and DRRadioService
+builder.Services.AddHttpClient<DR_Repo.Services.DRRadioService>();
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
