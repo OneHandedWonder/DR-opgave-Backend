@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DR.Data;
 using DR_Repo.Auth;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RecordsRepo;
@@ -82,8 +83,14 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<RecordDbContext>(options =>
 options.UseNpgsql(builder.Configuration.GetConnectionString("DR-DB")));
 builder.Services.AddScoped<RecordRepoDB>();
+builder.Services.AddScoped<TrackRepoDB>();
 builder.Services.Configure<JwtSettings>(jwtSection);
 builder.Services.AddSingleton<AuthService>();
+
+// Register HttpClient and DRRadioService
+builder.Services.AddHttpClient<DR_Repo.Services.DRRadioService>();
+builder.Services.AddHostedService<DR_Repo.Services.TrackSnapshotBackgroundService>();
+builder.Services.AddScoped<DR_Repo.Services.IHealthStatusService, DR_Repo.Services.HealthStatusService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -117,6 +124,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+builder.Services.AddHealthChecks()
+    .AddCheck<DatabaseHealthCheck>("database");
 
 var app = builder.Build();
 
@@ -138,3 +147,36 @@ app.UseAuthorization();
 app.MapControllers();                   // map controller routes
 
 app.Run();
+
+public sealed class DatabaseHealthCheck : IHealthCheck
+{
+    private readonly IServiceScopeFactory _scopeFactory;
+
+    public DatabaseHealthCheck(IServiceScopeFactory scopeFactory)
+    {
+        _scopeFactory = scopeFactory;
+    }
+
+    public async Task<HealthCheckResult> CheckHealthAsync(
+        HealthCheckContext context,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<RecordDbContext>();
+            var canConnect = await dbContext.Database.CanConnectAsync(cancellationToken);
+
+            if (!canConnect)
+            {
+                return HealthCheckResult.Unhealthy("Database connection failed.");
+            }
+
+            return HealthCheckResult.Healthy("Database connection is healthy.");
+        }
+        catch (Exception ex)
+        {
+            return HealthCheckResult.Unhealthy("Database check threw an exception.", ex);
+        }
+    }
+}
